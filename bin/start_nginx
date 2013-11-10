@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+erb conf/nginx.conf.erb > conf/nginx.conf
+exec bin/nginx -p .

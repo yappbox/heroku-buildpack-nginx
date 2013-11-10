@@ -1,0 +1,21 @@
+daemon off;
+worker_processes  4;
+
+events { }
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    access_log  off;
+
+    server {
+        listen <%= ENV["PORT"] %>;
+        server_name _;
+
+        location / {
+            root   html;
+            index  index.html;
+        }
+    }
+}

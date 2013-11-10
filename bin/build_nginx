@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+command -v vulcan >/dev/null 2>&1 || {
+  echo >&2 "vulcan gem is required, see https://devcenter.heroku.com/articles/buildpack-binaries"
+  exit 1
+}
+
+NGINX=nginx-1.4.3
+PCRE=pcre-8.33
+BINDIR="$( cd "$( dirname "$0" )" && pwd )"
+
+cd $TMPDIR
+
+curl http://nginx.org/download/$NGINX.tar.gz > $NGINX.tar.gz
+tar -xf $NGINX.tar.gz
+cd $NGINX
+curl ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/$PCRE.tar.gz > $PCRE.tar.gz
+tar -xf $PCRE.tar.gz
+rm $PCRE.tar.gz
+
+prefix=/app/vendor/nginx
+
+build_cmd="./configure --with-pcre=$PCRE --prefix=$prefix --conf-path=/app/conf/nginx.conf --pid-path=/app/logs/nginx.pid --error-log-path=stderr --http-log-path=/app/logs/access.log && make install"
+
+vulcan build -v -o build.tar.gz --prefix $prefix --command "$build_cmd"
+
+tar -xvf build.tar.gz
+
+cp sbin/nginx $BINDIR
+
+cd $BINDIR/..

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+BUILD_DIR=$1
+
+function install {
+  if [ ! -f "$BUILD_DIR/$1" ]; then
+    echo "-----> Installing $BUILD_DIR/$1"
+    mkdir -p $(dirname "$BUILD_DIR/$1")
+    cp "$1" "$BUILD_DIR/$1"
+  fi
+}
+
+install bin/nginx
+install bin/start_nginx
+install conf/mime.types
+install conf/nginx.conf.erb
+
+bin/nginx -v 2>&1
