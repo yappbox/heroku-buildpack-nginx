@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
 
+SOURCE_DIR="$( cd "$( dirname "$0" )" && cd .. && pwd )"
 BUILD_DIR=$1
 
 function install {
   if [ ! -f "$BUILD_DIR/$1" ]; then
     echo "-----> Installing $BUILD_DIR/$1"
     mkdir -p $(dirname "$BUILD_DIR/$1")
-    cp "$1" "$BUILD_DIR/$1"
+    cp "$SOURCE_DIR/$1" "$BUILD_DIR/$1"
   fi
 }
 
@@ -16,4 +17,4 @@ install bin/start_nginx
 install conf/mime.types
 install conf/nginx.conf.erb
 
-bin/nginx -v 2>&1
+"$SOURCE_DIR/bin/nginx" -v 2>&1
